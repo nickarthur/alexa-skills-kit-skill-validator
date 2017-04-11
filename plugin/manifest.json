@@ -1,0 +1,31 @@
+{
+  "manifest_version": 2,
+
+  "name": "Alexa Quick Validation",
+  "description": "Quickly check a handful of test cases that will cause an Alexa Skill to not be certified.",
+  "version": "1.0",
+
+  
+  "browser_action": {
+   "default_icon": "icon.png"
+  },
+  
+  "background": {
+    "scripts": [
+      "plugin_background.js"
+    ],
+    "persistent": false
+  },
+  "web_accessible_resources": [
+    "plugin_inject.js", "plugin_shiv.js","library/validation.js","plugin_shiv.css"
+  ],
+  "permissions": [
+    "https://developer.amazon.com/edw/home.html#/skill/*",
+    "activeTab"
+  ],
+  "applications": {
+    "gecko": {
+      "id": "alexaquickvalidation@amazon.com"
+    }
+  }
+}
