@@ -17,7 +17,7 @@
     "persistent": false
   },
   "web_accessible_resources": [
-    "plugin_inject.js", "plugin_shiv.js","library/validation.js","plugin_shiv.css"
+    "plugin_inject.js", "plugin_shiv.js","library/validation.js","library/utility.js","plugin_shiv.css"
   ],
   "permissions": [
     "https://developer.amazon.com/edw/home.html#/skill/*",

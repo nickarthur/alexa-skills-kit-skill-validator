@@ -3,6 +3,10 @@
     inject.src = chrome.extension.getURL('plugin_shiv.js');
     (document.head || document.documentElement).appendChild(inject);
     
+    let utility = document.createElement('script');
+    utility.src = chrome.extension.getURL('library/utility.js');
+    (document.head || document.documentElement).appendChild(utility);
+
     let validation = document.createElement('script');
     validation.src = chrome.extension.getURL('library/validation.js');
     (document.head || document.documentElement).appendChild(validation);

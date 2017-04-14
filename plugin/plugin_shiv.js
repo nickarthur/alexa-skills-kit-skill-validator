@@ -11,7 +11,7 @@
     function showHideButton() {
         $(".validateButton").remove();
         let url = window.location.href;
-        if (url.indexOf("https://developer.amazon.com/edw/home.html#/skill/") > -1) {
+        if (url.startsWith("https://developer.amazon.com/edw/home.html#/skill/")) {
             $("body").append(validateButton);
         }
         console.log(url);
@@ -30,7 +30,7 @@
             console.log(skills);
 
             let skillInfo = getSkillAndLocale();
-            let type = skillInfo.live ? "Live" : "Development";
+            let type = skillInfo.type;
 
             console.log(skillInfo);
 
@@ -216,21 +216,30 @@
 
             let urlRegexDevelopment = /skill\/([^/]+)\/([^/?]+)\//g;
             let urlRegexLive = /skill\/live\/([^/]+)\/([^/?]+)\//g;
+            let urlRegexCert = /skill\/cert\/([^/]+)\/([^/?]+)\//g;
             let url = window.location.href;
             let matches = urlRegexLive.exec(url);
-            let isLive = true;
-            if (!matches) {
-                matches = urlRegexDevelopment.exec(url);
-                isLive = false;
+            let type = "Live";
+            if(!matches){
+                matches = urlRegexCert.exec(url);
+                if(matches){
+                    type = "Certification";
+                }
             }
             if (!matches) {
-                throw Error("OMGWTFBBQ... URL doesn't match expected value.");
+                matches = urlRegexDevelopment.exec(url);
+                if(matches){
+                    type = "Development";
+                }
+            }
+            if (!matches) {
+                throw Error("URL doesn't match expected value.");
             }
             if (matches.length > 2) {
                 return {
                     "skillId": matches[1],
                     "locale": matches[2],
-                    "live": isLive
+                    "type": type
                 }
             }
 
