@@ -1336,6 +1336,9 @@ function loadTests(tests){
         }
     });
 
+    //These three tests are currently commented out because of CORS issues migrating from GreaseMonkey to a native browser plugin.
+    //They will be reinstated once the problem has been resolved.
+
     /*
      * Test to check whether Privacy Policy field is enabled and whether the URL resolves successfully for every single enabled locale
      * Warns if no Privacy Policy
