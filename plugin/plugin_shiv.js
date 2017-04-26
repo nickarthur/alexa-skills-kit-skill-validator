@@ -12,7 +12,9 @@
         $(".validateButton").remove();
         let url = window.location.href;
         if (url.startsWith("https://developer.amazon.com/edw/home.html#/skill/")) {
+            console.log("Appending new button.");
             $("body").append(validateButton);
+            $(validateButton).click(validateClick);
         }
         console.log(url);
     }
@@ -21,7 +23,7 @@
     let validateButton = $('<button class="validateButton">Validate Skill</button>');
 
 
-    $(validateButton).click(function() {
+    function validateClick() {
         getAllSkills(function(data) {
 
             let status = [];
@@ -316,7 +318,7 @@
 
             return interactionModel;
         }
-    });
+    };
 
-
+    showHideButton();
 })();
