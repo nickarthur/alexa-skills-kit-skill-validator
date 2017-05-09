@@ -19,26 +19,41 @@ if(!getHashOfIntents){
      */
     function getRequestResolves(url, callback){
         url = url.trim();
-        url ="www.google.com";
         if(!url.toLowerCase().startsWith("http")){
             url = "https://" + url;
         }
-        url = url.replace("http://","https://");
-
         console.log("    URL: '" + url + "'");
 
-        var req = new XMLHttpRequest();
-        req.open("GET", url, true);
-        req.onreadystatechange = function() {
-          if (req.readyState == 4) {
-            if (req.status == 200) {
-                mCallback(true, null);
-            }else{
-                callback(false, "Non-200 status code: " + req.status);
+        let timeout = setTimeout(function(){
+            callback(false, "Validator Timeout");
+        }, 4000);
+
+        GM_xmlhttpRequest({
+            method: "GET",
+            url: url,
+            context: this,
+            synchronous: false,
+            onload: function(response) {
+                clearTimeout(timeout);
+                if(response.status == 200){
+                    callback(true, null);
+                }else{
+                    callback(false, "Non-200 status code: " + response.status);
+                }
+            },
+            onerror: function(response){
+                clearTimeout(timeout);
+                callback(false, "Non-200 status code: " + response.status);
+            },
+            ontimeout: function(respose){
+                clearTimeout(timeout);
+                callback(false, "Timeout");
+            },
+            onabort: function(respose){
+                clearTimeout(timeout);
+                callback(false, "Abort");
             }
-          }
-        };
-        req.send();
+        });
     }
 
     /*

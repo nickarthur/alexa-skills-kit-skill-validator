@@ -1336,143 +1336,142 @@ function loadTests(tests){
         }
     });
 
-    //These three tests are currently commented out because of CORS issues migrating from GreaseMonkey to a native browser plugin.
-    //They will be reinstated once the problem has been resolved.
-
-    /*
-     * Test to check whether Privacy Policy field is enabled and whether the URL resolves successfully for every single enabled locale
-     * Warns if no Privacy Policy
-     */
-    /*tests.push({
-        "name" : "Privacy Policy Exists and Resolves Successfully - Required For Account Linking",
-        "description" : "Test to check whether Privacy Policy field is enabled and whether the URL resolves successfully for every single enabled locale. Warns if no Privacy Policy" +
-        "<a href='https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/alexa-skills-kit-functional-testing#skill-description'>DOCUMENTATION</a>",
-        "run" : function(test, metadata, interactionModel, locale, callback){
-            let errors = [];
-            let warnings = [];
-            if(!metadata){
-                console.warn("Metadata does not exist.");
-                callback(null);
-                return;
-            }
-            let required = metadata.accountLinkingInfo.supportsLinking;
-            let queue = [];
-            
-            if(!metadata.privacyPolicyUrl){
-                if(required){
-                    errors.push("Does not have a privacy policy - required for account linking"); 
+    if(GM_xmlhttpRequest){
+        /*
+         * Test to check whether Privacy Policy field is enabled and whether the URL resolves successfully for every single enabled locale
+         * Warns if no Privacy Policy
+         */
+        tests.push({
+            "name" : "Privacy Policy Exists and Resolves Successfully - Required For Account Linking",
+            "description" : "Test to check whether Privacy Policy field is enabled and whether the URL resolves successfully for every single enabled locale. Warns if no Privacy Policy" +
+            "<a href='https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/alexa-skills-kit-functional-testing#skill-description'>DOCUMENTATION</a>",
+            "run" : function(test, metadata, interactionModel, locale, callback){
+                let errors = [];
+                let warnings = [];
+                if(!metadata){
+                    console.warn("Metadata does not exist.");
+                    callback(null);
+                    return;
+                }
+                let required = metadata.accountLinkingInfo.supportsLinking;
+                let queue = [];
+                
+                if(!metadata.privacyPolicyUrl){
+                    if(required){
+                        errors.push("Does not have a privacy policy - required for account linking"); 
+                    }else{
+                        warnings.push("Does not have a privacy policy"); 
+                    }
                 }else{
-                    warnings.push("Does not have a privacy policy"); 
+                    queue.push(metadata.privacyPolicyUrl);
                 }
-            }else{
-                queue.push(metadata.privacyPolicyUrl);
-            }
-            
+                
 
-            let checkQueue = function(){
-                if(queue.length === 0){
-                    callback(test, errors, warnings);
+                let checkQueue = function(){
+                    if(queue.length === 0){
+                        callback(test, errors, warnings);
+                        return;
+                    }
+                    let url = queue.pop();
+                    getRequestResolves(url, function(resolved, err){
+                        if(err){
+                            errors.push(url + " for Privacy Policy returned with error: " + err);
+                        }
+                        checkQueue();
+                    });
+                }
+                checkQueue();
+            }
+        });
+
+        /*
+         * Test to check whether Terms of Service field is enabled and whether the URL resolves successfully for every single enabled locale
+         * Warns if no TOS
+         */
+        tests.push({
+            "name" : "Terms of Service Exists and Resolves Successfully",
+            "description" : "Test to check whether Terms of Service field is enabled and whether the URL resolves successfully for every single enabled locale. Warns if no TOS",
+            "run" : function(test, metadata, interactionModel, locale, callback){
+                let errors = [];
+                let warnings = [];
+                if(!metadata){
+                    console.warn("Metadata does not exist.");
+                    callback(null);
                     return;
                 }
-                let url = queue.pop();
-                getRequestResolves(url, function(resolved, err){
-                    if(err){
-                        errors.push(url + " for Privacy Policy returned with error: " + err);
+               
+                let queue = [];
+             
+                if(!metadata.termsOfUseUrl){
+                    warnings.push("Does not have a terms of service"); 
+                }else{
+                    queue.push(metadata.termsOfUseUrl);
+                }
+                
+
+                let checkQueue = function(){
+                    if(queue.length === 0){
+                        callback(test, errors, warnings);
+                        return;
                     }
-                    checkQueue();
-                });
+                    let url = queue.pop();
+                    getRequestResolves(url, function(resolved, err){
+                        if(err){
+                            errors.push(url + " for Terms of Service returned with error: " + err);
+                        }
+                        checkQueue();
+                    });
+                }
+                checkQueue();
             }
-            checkQueue();
-        }
-    });*/
+        });
 
-    /*
-     * Test to check whether Terms of Service field is enabled and whether the URL resolves successfully for every single enabled locale
-     * Warns if no TOS
-     */
-    /*tests.push({
-        "name" : "Terms of Service Exists and Resolves Successfully",
-        "description" : "Test to check whether Terms of Service field is enabled and whether the URL resolves successfully for every single enabled locale. Warns if no TOS",
-        "run" : function(test, metadata, interactionModel, locale, callback){
-            let errors = [];
-            let warnings = [];
-            if(!metadata){
-                console.warn("Metadata does not exist.");
-                callback(null);
-                return;
-            }
-           
-            let queue = [];
-         
-            if(!metadata.termsOfUseUrl){
-                warnings.push("Does not have a terms of service"); 
-            }else{
-                queue.push(metadata.termsOfUseUrl);
-            }
-            
-
-            let checkQueue = function(){
-                if(queue.length === 0){
-                    callback(test, errors, warnings);
+        /*
+         * Test to check for URLs in the full description and whether the URL resolves successfully for every single enabled locale
+         */
+        tests.push({
+            "name" : "Full Description URLs Resolve",
+            "description" : "Test to check for URLs in the full description and whether the URL resolves successfully for every single enabled locale",
+            "run" : function(test, metadata, interactionModel, locale, callback){
+                let errors = [];
+                let warnings = [];
+                if(!metadata){
+                    console.warn("Metadata does not exist.");
+                    callback(null);
                     return;
                 }
-                let url = queue.pop();
-                getRequestResolves(url, function(resolved, err){
-                    if(err){
-                        errors.push(url + " for Terms of Service returned with error: " + err);
-                    }
-                    checkQueue();
-                });
-            }
-            checkQueue();
-        }
-    });*/
-
-    /*
-     * Test to check for URLs in the full description and whether the URL resolves successfully for every single enabled locale
-     */
-    /*tests.push({
-        "name" : "Full Description URLs Resolve",
-        "description" : "Test to check for URLs in the full description and whether the URL resolves successfully for every single enabled locale",
-        "run" : function(test, metadata, interactionModel, locale, callback){
-            let errors = [];
-            let warnings = [];
-            if(!metadata){
-                console.warn("Metadata does not exist.");
-                callback(null);
-                return;
-            }
-            let regex = /(ftp:\/\/|www\.|https?:\/\/){1}[a-zA-Z0-9u00a1-\uffff0-]{2,}\.[a-zA-Z0-9u00a1-\uffff0-]{2,}(\S*)/gi;
-            
-            let queue = [];
-          
-            if(metadata.description){
-                let matches = metadata.description.match(regex);
-                if(matches){
-                    for(let i = 0; i < matches.length; i++){
-                        queue.push(matches[i]);
+                let regex = /(ftp:\/\/|www\.|https?:\/\/){1}[a-zA-Z0-9u00a1-\uffff0-]{2,}\.[a-zA-Z0-9u00a1-\uffff0-]{2,}(\S*)/gi;
+                
+                let queue = [];
+              
+                if(metadata.description){
+                    let matches = metadata.description.match(regex);
+                    if(matches){
+                        for(let i = 0; i < matches.length; i++){
+                            queue.push(matches[i]);
+                        }
                     }
                 }
-            }
-            
+                
 
-            let checkQueue = function(){
-                if(!queue || queue.length === 0){
-                    callback(test, errors, warnings);
-                    return;
-                }
-                let url = queue.pop();
-                getRequestResolves(url, function(resolved, err){
-                    console.log("returned");
-                    if(err){
-                        console.log("added error");
-                        errors.push(url + " in description returned with error: " + err);
-                        console.log("added error post");
+                let checkQueue = function(){
+                    if(!queue || queue.length === 0){
+                        callback(test, errors, warnings);
+                        return;
                     }
-                    checkQueue();
-                });
+                    let url = queue.pop();
+                    getRequestResolves(url, function(resolved, err){
+                        console.log("returned");
+                        if(err){
+                            console.log("added error");
+                            errors.push(url + " in description returned with error: " + err);
+                            console.log("added error post");
+                        }
+                        checkQueue();
+                    });
+                }
+                checkQueue();
             }
-            checkQueue();
-        }
-    });*/
+        });
+    }
 }
