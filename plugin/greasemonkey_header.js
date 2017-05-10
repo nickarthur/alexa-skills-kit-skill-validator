@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Alexa Skills Kit Skill Validator
-// @namespace    http://developer.amazon.com/
+// @namespace    https://github.com/alexa/alexa-skills-kit-skill-validator
 // @version      0.1
 // @description  Run automatic SLU validation from the developer portal language model page.
 // @author       willblas@amazon.com
