@@ -1336,7 +1336,7 @@ function loadTests(tests){
         }
     });
 
-    if(GM_xmlhttpRequest){
+    if(typeof GM_xmlhttpRequest !== 'undefined'){
         /*
          * Test to check whether Privacy Policy field is enabled and whether the URL resolves successfully for every single enabled locale
          * Warns if no Privacy Policy
