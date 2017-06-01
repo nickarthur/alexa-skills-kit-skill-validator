@@ -21,12 +21,6 @@ if(!getHashOfIntents){
         phrase = phrase.toLowerCase();
         invocationName = invocationName.toLowerCase();
 
-        console.log(phrase);
-        console.log(phrase.length);
-
-        console.log(invocationName);
-        console.log(invocationName.length);
-
         let index = phrase.indexOf(invocationName);
         if(index > -1){
             return index + invocationName.length;
@@ -42,19 +36,15 @@ if(!getHashOfIntents){
             }
 
             if(invocationName[pointer2] === phrase[pointer1]){
-                console.log("match")
                 if(pointer2 === invocationName.length - 1){
                     return pointer1 + 1;
                 }
             }else{
-                console.log("reset");
                 pointer2 = 0;
             }
 
 
-            console.log(phrase[pointer1]);
-            console.log(invocationName[pointer2]);
-
+    
             pointer1++;
             pointer2++;
 
