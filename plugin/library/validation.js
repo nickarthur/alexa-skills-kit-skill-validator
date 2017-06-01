@@ -1006,10 +1006,10 @@ function loadTests(tests){
             if(invocationName){
                 let split = invocationName.split(" ");
                 if(split.length > 3){
-                    warnings.push(prop + " invocation name '" + invocationName + "' > 3 words in length");
+                    warnings.push("Invocation name '" + invocationName + "' > 3 words in length");
                 }
             }else{
-                errors.push(prop + " invocation name not present");
+                errors.push("Invocation name not present");
             }
             
             callback(test, errors, warnings);
@@ -1040,7 +1040,7 @@ function loadTests(tests){
                 let invokeRegex = new RegExp("(" + invocationName + ")[^\\w]|(" + invocationName + ")$", 'gi');
                 let examplePhrase = metadata.examplePhrases[0];
                 examplePhrase = normalizeUtterance(examplePhrase);
-                if(!examplePhrase.match(getWakeWordRegex(locale)) || !examplePhrase.match(invokeRegex)){
+                if(!examplePhrase.match(getWakeWordRegex(locale)) || getLastCharacterPositionOfInvocationName(examplePhrase, invocationName) === -1){
                     errors.push("First example phrase: '" + examplePhrase + " ' does not contain both the wakeword and the invocation name");
                 }
             }else if(!invocationName){
@@ -1082,8 +1082,8 @@ function loadTests(tests){
                         continue;
                     }
                     //find the location of the invocation name, if there
-                    let index = examplePhrase.toLowerCase().indexOf(invocationName);
-                    examplePhrase = examplePhrase.substring((index > -1) ? index + invocationName.length : 0,  examplePhrase.length).trim();
+                    let index = getLastCharacterPositionOfInvocationName(examplePhrase, invocationName);
+                    examplePhrase = examplePhrase.substring((index > -1) ? index : 0,  examplePhrase.length).trim();
                     if(!isUtteranceInUtteranceList(examplePhrase, utterances, slots, locale)){
                         //console.error("Example: " + examplePhrase);
                         errors.push("Example phrase '" + examplePhrase + "'' not found in utterances");
@@ -1095,6 +1095,8 @@ function loadTests(tests){
             callback(test, errors, warnings);
         }
     });
+
+    
 
 
     /*

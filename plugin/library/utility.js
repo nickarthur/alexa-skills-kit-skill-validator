@@ -13,6 +13,57 @@ if(!getHashOfIntents){
     }
 
     /*
+    * function to get the last character position of the invocation name in the phrase
+    * normalized for tokenization
+    */
+
+    function getLastCharacterPositionOfInvocationName(phrase, invocationName){
+        phrase = phrase.toLowerCase();
+        invocationName = invocationName.toLowerCase();
+
+        console.log(phrase);
+        console.log(phrase.length);
+
+        console.log(invocationName);
+        console.log(invocationName.length);
+
+        let index = phrase.indexOf(invocationName);
+        if(index > -1){
+            return index + invocationName.length;
+        }
+        let pointer1 = pointer2 = 0;
+        while(pointer1 < phrase.length && pointer2 < invocationName.length){
+            while(phrase[pointer1] === "." || phrase[pointer1] === " "){
+                pointer1++;
+            }
+
+            while(invocationName[pointer2] === "." || invocationName[pointer2] === " "){
+                pointer2++;
+            }
+
+            if(invocationName[pointer2] === phrase[pointer1]){
+                console.log("match")
+                if(pointer2 === invocationName.length - 1){
+                    return pointer1 + 1;
+                }
+            }else{
+                console.log("reset");
+                pointer2 = 0;
+            }
+
+
+            console.log(phrase[pointer1]);
+            console.log(invocationName[pointer2]);
+
+            pointer1++;
+            pointer2++;
+
+        }
+        return -1;
+
+    }
+
+    /*
      * Function to see if a GET request to a URL resolves correctly.
      * url: URL of get request
      * callback: function(bool success, str err);
