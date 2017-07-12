@@ -27,7 +27,7 @@ if(!getHashOfIntents){
         }
         let pointer1 = pointer2 = 0;
         while(pointer1 < phrase.length && pointer2 < invocationName.length){
-            while(phrase[pointer1] === "." || phrase[pointer1] === " "){
+            while(phrase[pointer1] === "." || phrase[pointer1] === " "  || phrase[pointer1] === "-"){
                 pointer1++;
             }
 
@@ -254,7 +254,7 @@ if(!getHashOfIntents){
         //this can be extended to support other locales
         switch(locale.toLowerCase()){
             default:
-                return /^(from|to|about|for|if|whether|that|and)/i;
+                return /^(from|to|about|for|if|whether|that|and) /i;
         }
         
     }

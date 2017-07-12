@@ -1103,8 +1103,10 @@ function loadTests(tests){
      * Check to see if a given utterance is represented in the utterance list
      */
     function isUtteranceInUtteranceList(utterance, utteranceList, slots, locale){
+        // console.log("Utterance: "+ utterance);
         utterance = normalizeUtterance(utterance);
         utterance = utterance.replace(getConnectorWordRegex(locale), '').trim();
+        // console.log("Utterance: "+ utterance);
 
         //because example phrases can have dashes, but not utterances
         utterance = utterance.replace("-"," ");
@@ -1123,6 +1125,9 @@ function loadTests(tests){
                 }
                 let utteranceLetter = utterance[x];
                 let currentLetter = current[y];
+
+                // console.log(utteranceLetter);
+                // console.log(currentLetter);
                 if(currentLetter === "{"){
                     let count = 0;
                     let slot = "";

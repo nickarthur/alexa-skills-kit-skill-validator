@@ -23,7 +23,7 @@ utterance=utterance.replace(/[^\w\s{}]/gi,"");utterance=utterance.trim();return 
     * function to get the last character position of the invocation name in the phrase
     * normalized for tokenization
     */
-function getLastCharacterPositionOfInvocationName(phrase,invocationName){phrase=phrase.toLowerCase();invocationName=invocationName.toLowerCase();let index=phrase.indexOf(invocationName);if(index>-1){return index+invocationName.length}let pointer1=pointer2=0;while(pointer1<phrase.length&&pointer2<invocationName.length){while(phrase[pointer1]==="."||phrase[pointer1]===" "){pointer1++}while(invocationName[pointer2]==="."||invocationName[pointer2]===" "){pointer2++}if(invocationName[pointer2]===phrase[pointer1]){if(pointer2===invocationName.length-1){return pointer1+1}}else{pointer2=0}pointer1++;pointer2++}return-1}/*
+function getLastCharacterPositionOfInvocationName(phrase,invocationName){phrase=phrase.toLowerCase();invocationName=invocationName.toLowerCase();let index=phrase.indexOf(invocationName);if(index>-1){return index+invocationName.length}let pointer1=pointer2=0;while(pointer1<phrase.length&&pointer2<invocationName.length){while(phrase[pointer1]==="."||phrase[pointer1]===" "||phrase[pointer1]==="-"){pointer1++}while(invocationName[pointer2]==="."||invocationName[pointer2]===" "){pointer2++}if(invocationName[pointer2]===phrase[pointer1]){if(pointer2===invocationName.length-1){return pointer1+1}}else{pointer2=0}pointer1++;pointer2++}return-1}/*
      * Function to see if a GET request to a URL resolves correctly.
      * url: URL of get request
      * callback: function(bool success, str err);
@@ -69,7 +69,7 @@ switch(locale.toLowerCase()){case"de_de":return/[^\w'.,\-{}\sßäëïöü]/;defa
 //this can be extended to support other locales
 switch(locale.toLowerCase()){case"de_de":return/[^\w\s.?:,'-ßäëïöü]/gim;default:return/[^\w\s.?:,'-]/gim}}function getConnectorWordRegex(locale){
 //this can be extended to support other locales
-switch(locale.toLowerCase()){default:return/^(from|to|about|for|if|whether|that|and)/i}}function getWakeWordRegex(locale){
+switch(locale.toLowerCase()){default:return/^(from|to|about|for|if|whether|that|and) /i}}function getWakeWordRegex(locale){
 //this can be extended to support other locales
 switch(locale.toLowerCase()){default:return/Alexa|Echo|Computer|Amazon/gi}}String.prototype.replaceAll=function(search,replacement){var target=this;return target.replace(new RegExp(search,"g"),replacement)}}/*
  * Function to run all the tests (or specific set of tests if testNames is specified) based on the interaction model passed in
@@ -233,11 +233,17 @@ let index=getLastCharacterPositionOfInvocationName(examplePhrase,invocationName)
 errors.push("Example phrase '"+examplePhrase+"'' not found in utterances")}}}callback(test,errors,warnings)}});/*
      * Check to see if a given utterance is represented in the utterance list
      */
-function isUtteranceInUtteranceList(utterance,utteranceList,slots,locale){utterance=normalizeUtterance(utterance);utterance=utterance.replace(getConnectorWordRegex(locale),"").trim();
+function isUtteranceInUtteranceList(utterance,utteranceList,slots,locale){
+// console.log("Utterance: "+ utterance);
+utterance=normalizeUtterance(utterance);utterance=utterance.replace(getConnectorWordRegex(locale),"").trim();
+// console.log("Utterance: "+ utterance);
 //because example phrases can have dashes, but not utterances
 utterance=utterance.replace("-"," ");
 //console.log(locale+ ": " +utterance);
-if(utterance.length===0){return true}for(let i=0;i<utteranceList.length;i++){let current=normalizeUtterance(utteranceList[i]);let x=0,y=0;while(x<=utterance.length&&y<=current.length){if(x===utterance.length&&y===current.length){return true}let utteranceLetter=utterance[x];let currentLetter=current[y];if(currentLetter==="{"){let count=0;let slot="";while(currentLetter!=="}"){count++;currentLetter=current[y+count];if(currentLetter!=="}"){slot+=currentLetter}}count++;if(!slots[slot]){console.error("SLOT: '"+slot+"' has no values.");break}let slotValues=slots[slot].values.sort();let maxLength=0;for(let j=0;j<slotValues.length;j++){let currentSlot=normalizeUtterance(slotValues[j]);let part=utterance.substring(x,utterance.length);part=part.toLowerCase();currentSlot=currentSlot.toLowerCase();if(part.startsWith(currentSlot)){maxLength=Math.max(maxLength,currentSlot.length)}}if(maxLength===0){break}x+=maxLength;y+=count;continue}if(!utteranceLetter||!currentLetter||utteranceLetter.toLowerCase()!==currentLetter.toLowerCase()){break}x++;y++}}return false}/*
+if(utterance.length===0){return true}for(let i=0;i<utteranceList.length;i++){let current=normalizeUtterance(utteranceList[i]);let x=0,y=0;while(x<=utterance.length&&y<=current.length){if(x===utterance.length&&y===current.length){return true}let utteranceLetter=utterance[x];let currentLetter=current[y];
+// console.log(utteranceLetter);
+// console.log(currentLetter);
+if(currentLetter==="{"){let count=0;let slot="";while(currentLetter!=="}"){count++;currentLetter=current[y+count];if(currentLetter!=="}"){slot+=currentLetter}}count++;if(!slots[slot]){console.error("SLOT: '"+slot+"' has no values.");break}let slotValues=slots[slot].values.sort();let maxLength=0;for(let j=0;j<slotValues.length;j++){let currentSlot=normalizeUtterance(slotValues[j]);let part=utterance.substring(x,utterance.length);part=part.toLowerCase();currentSlot=currentSlot.toLowerCase();if(part.startsWith(currentSlot)){maxLength=Math.max(maxLength,currentSlot.length)}}if(maxLength===0){break}x+=maxLength;y+=count;continue}if(!utteranceLetter||!currentLetter||utteranceLetter.toLowerCase()!==currentLetter.toLowerCase()){break}x++;y++}}return false}/*
      * Test to check whether Example Utterances/Recommended Phrases are composed of valid characters.
      */
 tests.push({name:"Example Phrases are Composed of Valid Characters",description:"Test to check whether Example Utterances/Recommended Phrases are composed of valid characters."+"<a href='https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/alexa-skills-kit-functional-testing#review-and-test-example-phrases'>DOCUMENTATION</a>",run:function(test,metadata,interactionModel,locale,callback){let errors=[];let warnings=[];if(!metadata){console.warn("Metadata does not exist.");callback(null);return}let regex=getExamplePhraseValidCharactersRegex(locale);if(metadata.examplePhrases){for(let i=metadata.examplePhrases.length-1;i>=0;i--){let phrase=metadata.examplePhrases[i];if(!phrase||phrase.length<1){metadata.examplePhrases.splice(i,1)}else{let matches=phrase.match(regex);if(matches){errors.push("Example phrase '"+phrase+"' contains invalid characters")}}}}callback(test,errors,warnings)}});/*
