@@ -19,6 +19,7 @@ https://github.com/alexa/alexa-skills-kit-skill-validator/blob/mainline/output/g
 * Drag and drop the .crx file into the tab
 * Accept the permissions 
 #### Firefox
+At present the plugin currently only works with the developer edition of Firefox which can be found at https://www.mozilla.org/en-GB/firefox/developer/
 * Download the extension: https://github.com/alexa/alexa-skills-kit-skill-validator/blob/mainline/output/firefox_ask_validator.xpi
 * Navigate to `about:config`
 * Search for xpinstall.signatures.required and set to “false”
@@ -37,6 +38,7 @@ https://github.com/alexa/alexa-skills-kit-skill-validator/blob/mainline/output/g
 * Limited support for non-English skills (can you help write these REGEX?).
 * No checking for built-in slot and custom slot utterance collision—or for where slots collide with utterance plain text.
 * This is not a complete battery of tests.
+* Due to dependency issues the plugin currently only works with the developer edition of Firefox.
 
 ## Additions/Fixes/Bug Reports/Questions
 * If you know how to fix an issue that you run into and/or would like to add an SLU/other test, submit a pull request for the code base.
