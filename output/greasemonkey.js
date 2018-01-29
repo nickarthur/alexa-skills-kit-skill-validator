@@ -57,14 +57,13 @@ if (!getHashOfIntents) {
             url: url,
             context: this,
             synchronous: false,
-            onload: function(response) { 
-                clearTimeout(timeout); 
-                if (response.status == 200) { 
-                    callback(true, null) 
-                } 
-                else { 
-                    callback(false, "Non-200 status code: " + response.status) 
-                } 
+            onload: function(response) {
+                clearTimeout(timeout);
+                if (response.status == 200) {
+                    callback(true, null)
+                } else {
+                    callback(false, "Non-200 status code: " + response.status)
+                }
             },
             onerror: function(response) {
                 clearTimeout(timeout);
@@ -306,40 +305,53 @@ function loadTests(tests) {
     /*
      * Test to check whether the the interaction_model item exists.
      */
-    tests.push({ 
-        name: "Interaction Model Present", 
-        description: "Test to check whether the the interaction model exists in the data passed to the validator.", 
-        run: function(test, metadata, interactionModel, locale, callback) { let errors = []; let warnings = []; if (!interactionModel) { errors.push("Interaction Model is Not Present") } callback(test, errors, warnings) } });
+    tests.push({
+        name: "Interaction Model Present",
+        description: "Test to check whether the the interaction model exists in the data passed to the validator.",
+        run: function(test, metadata, interactionModel, locale, callback) { 
+            let errors = []; let warnings = []; if (!interactionModel) { errors.push("Interaction Model is Not Present") } callback(test, errors, warnings) }
+    });
     /*
      * Test to check whether the intent schema exists and whether there are more than 0.
      * Warns: < 5 Intents
      */
-    tests.push({ 
-        name: "Intent Schema Present", 
-        description: "Test to check whether the intent schema exists and whether there are more than 0. Warns: < 5 Intents", 
-        run: function(test, metadata, interactionModel, locale, callback) { let errors = []; let warnings = []; if (!interactionModel.intents) { errors.push("Intents is Null") } else if (interactionModel.intents.constructor !== Array || interactionModel.intents.length === 0) { errors.push("No Intents Defined in Intent Schema") } else if (interactionModel.intents.length < 5) { warnings.push("Less than 5 Intents defined in Intent Schema") } callback(test, errors, warnings) } });
+    tests.push({
+        name: "Intent Schema Present",
+        description: "Test to check whether the intent schema exists and whether there are more than 0. Warns: < 5 Intents",
+        run: function(test, metadata, interactionModel, locale, callback) { 
+            let errors = []; let warnings = []; if (!interactionModel.intents) { errors.push("Intents is Null") } else if (interactionModel.intents.constructor !== Array || interactionModel.intents.length === 0) { errors.push("No Intents Defined in Intent Schema") } else if (interactionModel.intents.length < 5) { warnings.push("Less than 5 Intents defined in Intent Schema") } callback(test, errors, warnings) }
+    });
     /*
      * Test to check whether the sample utterances exist and whether there are more than 0.
      * Warns: < 5 Sample Utterances
      */
-    tests.push({ 
-        name: "Sample Utterances Present", 
-        description: "Test to check whether the sample utterances exist and whether there are more than 0. Warns: < 5 Sample Utterances", 
-        run: function(test, metadata, interactionModel, locale, callback) { let errors = []; let warnings = []; if (!interactionModel.utterances) { errors.push("sampleUtterances is Null") } else if (interactionModel.utterances.constructor !== Array || interactionModel.utterances.length === 0) { errors.push("No Sample Utterances Defined in Sample Utterances") } else if (interactionModel.utterances.length < 5) { warnings.push("Less than 5 Utterances defined in Sample Utterances") } callback(test, errors, warnings) } });
+    tests.push({
+        name: "Sample Utterances Present",
+        description: "Test to check whether the sample utterances exist and whether there are more than 0. Warns: < 5 Sample Utterances",
+        run: function(test, metadata, interactionModel, locale, callback) { 
+            let errors = []; let warnings = []; if (!interactionModel.utterances) { errors.push("sampleUtterances is Null") } else if (interactionModel.utterances.constructor !== Array || interactionModel.utterances.length === 0) { errors.push("No Sample Utterances Defined in Sample Utterances") } else if (interactionModel.utterances.length < 5) { warnings.push("Less than 5 Utterances defined in Sample Utterances") } callback(test, errors, warnings) }
+    });
     /*
      * Test to check whether the slots exist.
      */
-    tests.push({ 
-        name: "Slots Present", 
-        description: "Test to check whether the slots data exist.", 
-        run: function(test, metadata, interactionModel, locale, callback) { let errors = []; let warnings = []; if (!interactionModel.slots || interactionModel.slots.constructor !== Array) { errors.push("Slots is Null") } callback(test, errors, warnings) } });
+    tests.push({
+        name: "Slots Present",
+        description: "Test to check whether the slots data exist.",
+        run: function(test, metadata, interactionModel, locale, callback) { 
+            let errors = []; let warnings = []; if (!interactionModel.slots || interactionModel.slots.constructor !== Array) { errors.push("Slots is Null") } callback(test, errors, warnings) }
+    });
     /*
      * Test to check whether Intents contains AMAZON.CancelIntent, AMAZON.HelpIntent, AMAZON.StopIntent
      */
-    tests.push({ 
-        name: "Built In Intents Present", 
-        description: "Test to check whether Intents contains AMAZON.CancelIntent, AMAZON.HelpIntent, AMAZON.StopIntent" + "<a href='https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/alexa-skills-kit-voice-interface-and-user-experience-testing#providing-help'>DOCUMENTATION</a>" + "<a href='https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/alexa-skills-kit-voice-interface-and-user-experience-testing#stopping-and-canceling'>DOCUMENTATION</a>", 
-        run: function(test, metadata, interactionModel, locale, callback) { let errors = []; let warnings = []; let intents = getHashOfIntents(interactionModel); if (!intents["AMAZON.CancelIntent"]) { errors.push("AMAZON.CancelIntent is not present") } if (!intents["AMAZON.HelpIntent"]) { errors.push("AMAZON.HelpIntent is not present") } if (!intents["AMAZON.StopIntent"]) { errors.push("AMAZON.StopIntent is not present") } callback(test, errors, warnings) } });
+    tests.push({
+        name: "Built In Intents Present",
+        description: "Test to check whether Intents contains AMAZON.CancelIntent, AMAZON.HelpIntent, AMAZON.StopIntent" + "<a href='https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/alexa-skills-kit-voice-interface-and-user-experience-testing#providing-help'>DOCUMENTATION</a>" + "<a href='https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/alexa-skills-kit-voice-interface-and-user-experience-testing#stopping-and-canceling'>DOCUMENTATION</a>",
+        run: function(test, metadata, interactionModel, locale, callback) { 
+            let errors = []; 
+            let warnings = []; 
+            let intents = getHashOfIntents(interactionModel); 
+            if (!intents["AMAZON.CancelIntent"]) { errors.push("AMAZON.CancelIntent is not present") } if (!intents["AMAZON.HelpIntent"]) { errors.push("AMAZON.HelpIntent is not present") } if (!intents["AMAZON.StopIntent"]) { errors.push("AMAZON.StopIntent is not present") } callback(test, errors, warnings) }
+    });
     /*
      * Test to check whether the sample utterances all refer to an existing intent.
      */
@@ -785,35 +797,37 @@ function loadTests(tests) {
     /*
      * Test to check whether Example Utterances use the deprecated {...|...} slot format. 
      */
-    tests.push({ 
-        name: "Does Not Use Deprecated Slot Format", 
-        description: "Test to check whether Example Utterances use the deprecated {...|...} slot format.", 
-        run: function(test, metadata, interactionModel, locale, callback) { 
-            let errors = []; 
-            let warnings = []; 
-            let regex = /\{[^}]*\|[^}]*\}/; 
-            let utterances = interactionModel.utterances; 
-            for (let i = 0; i < utterances.length; i++) { 
-                let utterance = utterances[i]; 
-                let matches = utterance.match(regex); 
-                if (matches && matches.length > 0) { 
-                    errors.push("Utterance '" + utterance + "' uses a deprecated slot format.") 
-                } 
-            } 
-            callback(test, errors, warnings) 
-        } 
+    tests.push({
+        name: "Does Not Use Deprecated Slot Format",
+        description: "Test to check whether Example Utterances use the deprecated {...|...} slot format.",
+        run: function(test, metadata, interactionModel, locale, callback) {
+            let errors = [];
+            let warnings = [];
+            let regex = /\{[^}]*\|[^}]*\}/;
+            let utterances = interactionModel.utterances;
+            for (let i = 0; i < utterances.length; i++) {
+                let utterance = utterances[i];
+                let matches = utterance.match(regex);
+                if (matches && matches.length > 0) {
+                    errors.push("Utterance '" + utterance + "' uses a deprecated slot format.")
+                }
+            }
+            callback(test, errors, warnings)
+        }
     });
 
     /*
      * Test to check whether Skill Metadata exists.
      */
-    tests.push({ 
-        name: "Skill Metadata Does Not Exist", 
-        description: "Test to check whether Skill Metadata exists.", 
-        run: function(test, metadata, interactionModel, locale, callback) { 
-            let errors = []; 
-            let warnings = []; 
-            if (!metadata) { warnings.push("Skill metadata was not found in object.") } callback(test, errors, warnings) } });
+    tests.push({
+        name: "Skill Metadata Does Not Exist",
+        description: "Test to check whether Skill Metadata exists.",
+        run: function(test, metadata, interactionModel, locale, callback) {
+            let errors = [];
+            let warnings = [];
+            if (!metadata) { warnings.push("Skill metadata was not found in object.") } callback(test, errors, warnings)
+        }
+    });
     /*
      * Test to check whether at least one  Example Utterances/Recommended Phrases is present.
      * Errors if < 1
@@ -911,6 +925,7 @@ function loadTests(tests) {
             callback(test, errors, warnings)
         }
     });
+
     /*
      * Check to see if a given utterance is represented in the utterance list
      */
@@ -962,6 +977,7 @@ function loadTests(tests) {
         }
         return false
     }
+
     /*
      * Test to check whether Example Utterances/Recommended Phrases are composed of valid characters.
      */
@@ -1015,6 +1031,7 @@ function loadTests(tests) {
             if (metadata.examplePhrases) { for (let i = metadata.examplePhrases.length - 1; i >= 0; i--) { let phrase = metadata.examplePhrases[i]; if (!phrase || phrase.length < 1) { metadata.examplePhrases.splice(i, 1) } else { let matches = phrase.match(regex); if (matches) { errors.push("Example phrase '" + phrase + "' must not enable a skill") } } } } callback(test, errors, warnings)
         }
     });
+
     /*
      * Test to check whether Short skill description (Summary) exists and has content for every single enabled locale
      * Warns if under 20 length
@@ -1033,6 +1050,7 @@ function loadTests(tests) {
             if (!metadata.summary) { errors.push("Does not have a short skill description (summary)") } else if (metadata.summary.length < 20) { warnings.push("Short skill description (summary) is short") } callback(test, errors, warnings)
         }
     });
+
     /*
      * Test to check whether Long skill description (Description) exists and has content for every single enabled locale
      * Warns if under 40 length
@@ -1046,11 +1064,12 @@ function loadTests(tests) {
             if (!metadata) {
                 console.warn("Metadata does not exist.");
                 callback(null);
-                return
+                return;
             }
             if (!metadata.description) { errors.push("Does not have a long skill description (description)") } else if (metadata.description.length < 40) { warnings.push("Long skill description (description) is short") } callback(test, errors, warnings)
         }
     });
+
     if (typeof GM_xmlhttpRequest !== "undefined") {
         /*
          * Test to check whether Privacy Policy field is enabled and whether the URL resolves successfully for every single enabled locale
@@ -1075,9 +1094,10 @@ function loadTests(tests) {
                     let url = queue.pop();
                     getRequestResolves(url, function(resolved, err) { if (err) { errors.push(url + " for Privacy Policy returned with error: " + err) } checkQueue() })
                 };
-                checkQueue()
+                checkQueue();
             }
         });
+
         /*
          * Test to check whether Terms of Service field is enabled and whether the URL resolves successfully for every single enabled locale
          * Warns if no TOS
@@ -1100,9 +1120,10 @@ function loadTests(tests) {
                     let url = queue.pop();
                     getRequestResolves(url, function(resolved, err) { if (err) { errors.push(url + " for Terms of Service returned with error: " + err) } checkQueue() })
                 };
-                checkQueue()
+                checkQueue();
             }
         });
+
         /*
          * Test to check for URLs in the full description and whether the URL resolves successfully for every single enabled locale
          */
@@ -1147,9 +1168,9 @@ function loadTests(tests) {
         if (url.startsWith("https://developer.amazon.com/edw/home.html#/skill/")) {
             console.log("Appending new button.");
             $("body").append(validateButton);
-            $(validateButton).click(validateClick)
+            $(validateButton).click(validateClick);
         }
-        console.log(url)
+        console.log(url);
     }
     let validateButton = $('<button class="validateButton">Validate Skill</button>');
 
@@ -1206,7 +1227,10 @@ function loadTests(tests) {
                         html += "<h3>" + error.name + "</h3>\n";
                         html += "<i>" + error.description + "</i><br>\n";
                         html += "\n<ul>\n";
-                        for (let j = 0; j < error.items.length; j++) { html += "<li>" + error.items[j] + "</li>\n" } html += "</ul>\n"
+                        for (let j = 0; j < error.items.length; j++) { 
+                            html += "<li>" + error.items[j] + "</li>\n" 
+                        } 
+                        html += "</ul>\n";
                     }
                     html += "<h2>WARNINGS</h2>\n";
                     for (let i = 0; i < response.warnings.length; i++) {
@@ -1214,14 +1238,17 @@ function loadTests(tests) {
                         html += "<h3>" + warning.name + "</h3>\n";
                         html += "<i>" + warning.description + "</i><br>\n";
                         html += "\n<ul>\n";
-                        for (let j = 0; j < warning.items.length; j++) { html += "<li>" + warning.items[j] + "</li>\n" } html += "</ul>\n"
+                        for (let j = 0; j < warning.items.length; j++) { 
+                            html += "<li>" + warning.items[j] + "</li>\n" 
+                        } 
+                        html += "</ul>\n";
                     }
                 } else {
                     let addition = "<h1>" + status[x].name.toUpperCase() + "</h1>\n";
                     addition += "Running: " + status[x].currentTest + "<br>\n";
                     let percent = status[x].total > 0 ? status[x].current / status[x].total * 100 : 0;
                     addition += "<div class = 'percentBarHolder'><div style='width: " + percent + "%;' class = 'percentBar'></div></div><br>";
-                    html = addition + html
+                    html = addition + html;
                 }
             }
             showDialog(html)
@@ -1271,35 +1298,41 @@ function loadTests(tests) {
             $("#testResults").html(html)
         }
 
-        function getSkillAndLocale() { 
-            let urlRegexDevelopment = /skill\/([^\/]+)\/([^\/?]+)\//g; 
-            let urlRegexLive = /skill\/live\/([^\/]+)\/([^\/?]+)\//g; 
-            let urlRegexCert = /skill\/cert\/([^\/]+)\/([^\/?]+)\//g; 
-            let url = window.location.href; 
-            let matches = urlRegexLive.exec(url); 
-            let type = "Live"; 
-            if (!matches) { 
-                matches = urlRegexCert.exec(url); 
-                if (matches) { 
-                    type = "Certification" 
-                } 
-            } 
-            if (!matches) { 
-                matches = urlRegexDevelopment.exec(url); 
-                if (matches) { type = "Development" } } if (!matches) { throw Error("URL doesn't match expected value.") } if (matches.length > 2) { return { skillId: matches[1], locale: matches[2], type: type } } return null }
-
-        function getAllSkills(callback) { 
-            $.get("https://developer.amazon.com/edw/ajax/ask/getApps", function(data) { callback(data) }) 
+        function getSkillAndLocale() {
+            let urlRegexDevelopment = /skill\/([^\/]+)\/([^\/?]+)\//g;
+            let urlRegexLive = /skill\/live\/([^\/]+)\/([^\/?]+)\//g;
+            let urlRegexCert = /skill\/cert\/([^\/]+)\/([^\/?]+)\//g;
+            let url = window.location.href;
+            let matches = urlRegexLive.exec(url);
+            let type = "Live";
+            if (!matches) {
+                matches = urlRegexCert.exec(url);
+                if (matches) {
+                    type = "Certification"
+                }
+            }
+            if (!matches) {
+                matches = urlRegexDevelopment.exec(url);
+                if (matches) { type = "Development" }
+            }
+            if (!matches) { throw Error("URL doesn't match expected value.") }
+            if (matches.length > 2) { return { skillId: matches[1], locale: matches[2], type: type } }
+            return null
         }
 
-        function getSkillDetails(skillId, locale, callback) { 
-            $.get("https://developer.amazon.com/edw/ajax/ask/getLastSavedModelDef" + "?appId=" + skillId + "&locale=" + locale + "&stage=Development", function(data) { callback(data) }) }
+        function getAllSkills(callback) {
+            $.get("https://developer.amazon.com/edw/ajax/ask/getApps", function(data) { callback(data) })
+        }
 
-        function getInvocationNames(skill) { 
-            if (skill.skillDefinition.customInteractionModelInfo) { 
-                return skill.skillDefinition.customInteractionModelInfo.invocationNameByLocale || skill.skillDefinition.smartHomeInfo.partnerSpokenName 
-            } 
-            return null 
+        function getSkillDetails(skillId, locale, callback) {
+            $.get("https://developer.amazon.com/edw/ajax/ask/getLastSavedModelDef" + "?appId=" + skillId + "&locale=" + locale + "&stage=Development", function(data) { callback(data) })
+        }
+
+        function getInvocationNames(skill) {
+            if (skill.skillDefinition.customInteractionModelInfo) {
+                return skill.skillDefinition.customInteractionModelInfo.invocationNameByLocale || skill.skillDefinition.smartHomeInfo.partnerSpokenName
+            }
+            return null
         }
 
         function getMetadata(skill, locale) {
@@ -1320,12 +1353,16 @@ function loadTests(tests) {
                 console.warn(e)
             }
             interactionModel.utterances = skillDetails.modelDef.testCases.trim().split("\n") || [];
-            for (let i = interactionModel.utterances.length - 1; i >= 0; i--) { 
-                let utterance = interactionModel.utterances[i]; if (!utterance || utterance.length < 1) { interactionModel.utterances.splice(i, 1) } } interactionModel.slots = skillDetails.modelDef.catalogs || [];
-            for (let i = 0; i < interactionModel.slots.length; i++) { 
-                let slot = interactionModel.slots[i]; 
-                let newSlot = { name: slot.name, values: [] }; 
-                for (let j = 0; j < slot.values.length; j++) { newSlot.values.push(slot.values[j].name.value) } interactionModel.slots[i] = newSlot }
+            for (let i = interactionModel.utterances.length - 1; i >= 0; i--) {
+                let utterance = interactionModel.utterances[i];
+                if (!utterance || utterance.length < 1) { interactionModel.utterances.splice(i, 1) }
+            }
+            interactionModel.slots = skillDetails.modelDef.catalogs || [];
+            for (let i = 0; i < interactionModel.slots.length; i++) {
+                let slot = interactionModel.slots[i];
+                let newSlot = { name: slot.name, values: [] };
+                for (let j = 0; j < slot.values.length; j++) { newSlot.values.push(slot.values[j].name.value) } interactionModel.slots[i] = newSlot
+            }
             return interactionModel
         }
     }
